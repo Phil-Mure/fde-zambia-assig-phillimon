@@ -1,6 +1,7 @@
 .venv/
 __pycache__/
 *.py[cod]
+.~lock.*#
 
 # Generated submission helpers and documents.
 capture_screenshots.py
