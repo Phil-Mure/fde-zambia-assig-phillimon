@@ -1,241 +1,1017 @@
 <!DOCTYPE html>
+{% load static %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quarterly Health Bulletin — {{ report.current_period }}</title>
+    <title>Neonatal Performance Bulletin - {{ report.current_period }}</title>
+    <link rel="icon" type="image/svg+xml" href="{% static 'bulletin/favicon.svg' %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #f4f7fb;
-            --card: #ffffff;
-            --primary: #0b5cab;
-            --accent: #0f766e;
-            --text: #1f2937;
-            --muted: #6b7280;
-            --border: #e5e7eb;
-            --warn: #b45309;
+            --bg: #f4f7fa;
+            --surface: #ffffff;
+            --surface-muted: #f8fafc;
+            --border: #d7e0ea;
+            --border-strong: #b8c5d6;
+            --text: #0f172a;
+            --text-secondary: #334155;
+            --muted: #64748b;
+            --primary: #0b6e8e;
+            --primary-dark: #084f68;
+            --primary-light: #e6f4f8;
+            --accent: #0d9488;
+            --accent-light: #ccfbf1;
+            --danger: #b42318;
+            --danger-bg: #fef3f2;
+            --warn: #b54708;
+            --warn-bg: #fffaeb;
+            --ok: #067647;
+            --ok-bg: #ecfdf3;
+            --info: #175cd3;
+            --info-bg: #eff8ff;
+            --shadow: 0 1px 2px rgba(15, 23, 42, 0.06), 0 8px 24px rgba(15, 23, 42, 0.06);
+            --radius: 14px;
         }
         * { box-sizing: border-box; }
         body {
             margin: 0;
-            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-            background: var(--bg);
+            font-family: Inter, "Segoe UI", Arial, sans-serif;
             color: var(--text);
-            line-height: 1.5;
+            background: var(--bg);
+            line-height: 1.6;
+            font-size: 16px;
+            -webkit-font-smoothing: antialiased;
         }
-        header {
-            background: linear-gradient(135deg, #0b5cab, #0f766e);
-            color: white;
-            padding: 2rem;
+        a {
+            color: var(--primary);
+            font-weight: 600;
+            text-decoration-thickness: 1px;
         }
-        header h1 { margin: 0 0 0.5rem; font-size: 1.75rem; }
-        header p { margin: 0; opacity: 0.9; }
-        .container { max-width: 1100px; margin: 0 auto; padding: 1.5rem; }
-        .toolbar {
-            display: flex;
-            gap: 1rem;
-            flex-wrap: wrap;
-            align-items: center;
-            margin-bottom: 1.5rem;
+        a:hover { color: var(--primary-dark); }
+        .shell {
+            max-width: 1420px;
+            margin: 0 auto;
+            padding: 24px;
         }
-        .toolbar a, .toolbar button {
-            background: var(--primary);
-            color: white;
-            border: none;
-            padding: 0.6rem 1rem;
-            border-radius: 6px;
-            text-decoration: none;
-            cursor: pointer;
-            font-size: 0.95rem;
+        .hero {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-top: 4px solid var(--primary);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 28px;
         }
-        .toolbar a.secondary { background: var(--accent); }
-        .grid {
+        .hero-top,
+        .toolbar,
+        .grid-2,
+        .summary-grid,
+        .metric-grid,
+        .kpi-strip {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 1rem;
-            margin-bottom: 1.5rem;
+            gap: 16px;
         }
-        .card {
-            background: var(--card);
+        .hero-top {
+            grid-template-columns: 1.8fr 1fr;
+            align-items: start;
+        }
+        .eyebrow {
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 0.14em;
+            font-size: 0.78rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        h1 {
+            margin: 0 0 10px;
+            font-size: clamp(1.85rem, 3vw, 2.6rem);
+            line-height: 1.15;
+            max-width: 18ch;
+            color: var(--text);
+            font-weight: 800;
+        }
+        .hero p {
+            margin: 0;
+            color: var(--text-secondary);
+            max-width: 72ch;
+            font-size: 1rem;
+        }
+        .hero-card {
+            background: var(--surface-muted);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 18px;
+        }
+        .hero-card h3,
+        .panel h2 {
+            margin: 0 0 10px;
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--text);
+        }
+        .meta-list { display: grid; gap: 10px; }
+        .meta-row,
+        .split {
+            display: flex;
+            justify-content: space-between;
+            gap: 16px;
+            align-items: center;
+        }
+        .meta-row span:first-child {
+            color: var(--muted);
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        .meta-row strong {
+            color: var(--text);
+            font-weight: 700;
+            text-align: right;
+        }
+        .muted, .small { color: var(--muted); }
+        .toolbar {
+            grid-template-columns: 0.9fr 1.2fr auto auto auto;
+            align-items: end;
+            margin-top: 20px;
+        }
+        .selector,
+        .action {
+            border-radius: 10px;
+            padding: 11px 14px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.92rem;
+        }
+        .selector {
+            background: var(--surface);
+            border: 1px solid var(--border-strong);
+            color: var(--text);
+        }
+        .selector label {
+            display: block;
+            font-size: 0.78rem;
+            color: var(--muted);
+            margin-bottom: 4px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        select {
+            width: 100%;
+            background: transparent;
+            border: none;
+            color: var(--text);
+            font-size: 0.98rem;
+            font-weight: 600;
+            outline: none;
+        }
+        .action {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 150px;
+            background: var(--surface);
+            color: var(--primary-dark);
+            border: 1px solid var(--border-strong);
+        }
+        .action:hover {
+            background: var(--primary-light);
+            border-color: var(--primary);
+        }
+        .action.primary {
+            background: var(--primary);
+            color: #ffffff;
+            border-color: var(--primary);
+        }
+        .action.primary:hover {
+            background: var(--primary-dark);
+            border-color: var(--primary-dark);
+            color: #ffffff;
+        }
+        .kpi-strip {
+            grid-template-columns: repeat(6, minmax(0, 1fr));
+            margin-top: 20px;
+        }
+        .kpi {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px;
+            box-shadow: var(--shadow);
+        }
+        .kpi .label {
+            font-size: 0.78rem;
+            color: var(--muted);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .kpi .value {
+            font-size: 1.75rem;
+            font-weight: 800;
+            margin: 8px 0;
+            color: var(--text);
+            line-height: 1.15;
+        }
+        .delta {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.82rem;
+            font-weight: 700;
+            border-radius: 6px;
+            padding: 4px 8px;
+        }
+        .delta.up { color: var(--ok); background: var(--ok-bg); }
+        .delta.down { color: var(--danger); background: var(--danger-bg); }
+        .delta.flat { color: var(--muted); background: #f1f5f9; }
+        .kpi .context {
+            font-size: 0.82rem;
+            color: var(--muted);
+            margin-top: 8px;
+        }
+        .summary-grid {
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            margin: 20px 0;
+        }
+        .note {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-left: 4px solid var(--accent);
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            padding: 18px;
+        }
+        .note h3 {
+            margin: 0 0 8px;
+            font-size: 0.98rem;
+            color: var(--text);
+            font-weight: 700;
+        }
+        .note p {
+            margin: 0;
+            color: var(--text-secondary);
+            font-size: 0.92rem;
+        }
+        .grid-2 {
+            grid-template-columns: 1.2fr 0.8fr;
+            margin-bottom: 20px;
+        }
+        .panel {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 20px;
+        }
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            gap: 16px;
+            align-items: end;
+            margin-bottom: 14px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border);
+        }
+        .panel-header p {
+            margin: 0;
+            color: var(--muted);
+            font-size: 0.9rem;
+        }
+        .metric-grid {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+        .mini-card {
+            background: var(--surface-muted);
             border: 1px solid var(--border);
             border-radius: 10px;
-            padding: 1.25rem;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+            padding: 14px;
         }
-        .card h2 {
-            margin: 0 0 1rem;
-            font-size: 1.1rem;
-            color: var(--primary);
-        }
-        .metric {
-            font-size: 1.75rem;
+        .mini-card .mini-label {
+            color: var(--muted);
+            font-size: 0.78rem;
             font-weight: 700;
-            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
         }
-        .metric-label { color: var(--muted); font-size: 0.9rem; }
+        .mini-card .mini-value {
+            margin-top: 6px;
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary-dark);
+        }
+        .trend-bars {
+            display: grid;
+            gap: 12px;
+            margin-top: 12px;
+        }
+        .trend-row {
+            display: grid;
+            grid-template-columns: 110px 1fr 80px;
+            gap: 12px;
+            align-items: center;
+        }
+        .bar-shell {
+            height: 10px;
+            border-radius: 999px;
+            background: #e8eef4;
+            overflow: hidden;
+        }
+        .bar-fill {
+            height: 100%;
+            border-radius: 999px;
+            background: var(--primary);
+        }
         table {
             width: 100%;
             border-collapse: collapse;
             font-size: 0.92rem;
         }
         th, td {
-            border-bottom: 1px solid var(--border);
-            padding: 0.65rem 0.5rem;
             text-align: left;
+            padding: 12px 10px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+            color: var(--text);
         }
-        th { color: var(--muted); font-weight: 600; }
+        th {
+            color: var(--text-secondary);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            font-weight: 700;
+            background: var(--surface-muted);
+        }
+        tbody tr:hover { background: #f8fafc; }
         .badge {
-            display: inline-block;
-            padding: 0.15rem 0.5rem;
-            border-radius: 999px;
-            font-size: 0.8rem;
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.76rem;
+            font-weight: 700;
+        }
+        .badge.high-performing { color: var(--ok); background: var(--ok-bg); }
+        .badge.stable { color: var(--info); background: var(--info-bg); }
+        .badge.watch { color: var(--warn); background: var(--warn-bg); }
+        .badge.critical { color: var(--danger); background: var(--danger-bg); }
+        .scorebar { min-width: 140px; font-weight: 700; color: var(--text); }
+        .scorebar .bar-shell { height: 8px; margin-top: 6px; }
+        .risk-list { display: grid; gap: 10px; }
+        .risk {
+            border: 1px solid #fecdca;
+            background: var(--danger-bg);
+            border-left: 4px solid var(--danger);
+            border-radius: 10px;
+            padding: 14px;
+        }
+        .risk-top {
+            display: flex;
+            justify-content: space-between;
+            gap: 16px;
+            align-items: center;
+            margin-bottom: 4px;
+        }
+        .risk-title { font-weight: 700; color: var(--text); }
+        .risk-points {
+            color: var(--danger);
+            font-weight: 700;
+            background: #ffffff;
+            border: 1px solid #fecdca;
+            border-radius: 6px;
+            padding: 2px 8px;
+            font-size: 0.82rem;
+        }
+        .files {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+        .file-chip {
+            padding: 6px 12px;
+            border-radius: 6px;
+            background: var(--surface-muted);
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            font-size: 0.82rem;
             font-weight: 600;
         }
-        .badge.ok { background: #d1fae5; color: #065f46; }
-        .badge.warn { background: #fef3c7; color: var(--warn); }
-        .up { color: #047857; }
-        .down { color: #b91c1c; }
-        footer {
-            margin-top: 2rem;
+        .sync-banner {
+            margin-top: 16px;
+            background: var(--info-bg);
+            color: var(--primary-dark);
+            border: 1px solid #b2ddff;
+            border-radius: 10px;
+            padding: 12px 14px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .sync-banner.warning {
+            background: var(--warn-bg);
+            border-color: #fec84b;
+            color: #93370d;
+        }
+        .sync-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--accent);
+            display: inline-block;
+            margin-right: 8px;
+        }
+        .catalog-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 10px;
+            margin-top: 12px;
+        }
+        .rollup-grid {
+            display: grid;
+            grid-template-columns: 0.85fr 1.15fr;
+            gap: 16px;
+            margin-top: 12px;
+        }
+        .aggregation-list {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 12px;
+        }
+        .aggregation-item {
+            background: var(--surface-muted);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 14px;
+        }
+        .aggregation-item strong {
+            display: block;
+            color: var(--primary-dark);
+            font-size: 1.25rem;
+            line-height: 1.2;
+            margin: 6px 0;
+        }
+        .period-chip {
             color: var(--muted);
-            font-size: 0.85rem;
+            font-size: 0.78rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .catalog-item {
+            background: var(--surface-muted);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 12px;
+        }
+        .catalog-item strong {
+            display: block;
+            color: var(--text);
+            margin-bottom: 4px;
+            font-size: 0.9rem;
+        }
+        .catalog-role {
+            color: var(--primary);
+            font-size: 0.76rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+        footer {
+            color: var(--muted);
             text-align: center;
+            font-size: 0.85rem;
+            padding: 20px 0 8px;
+            border-top: 1px solid var(--border);
+            margin-top: 8px;
+        }
+        @media (max-width: 1200px) {
+            .kpi-strip,
+            .summary-grid,
+            .metric-grid,
+            .aggregation-list {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+        @media (max-width: 960px) {
+            .hero-top,
+            .grid-2,
+            .rollup-grid,
+            .toolbar {
+                grid-template-columns: 1fr;
+            }
+        }
+        @media (max-width: 720px) {
+            .shell { padding: 16px; }
+            .kpi-strip,
+            .summary-grid,
+            .metric-grid,
+            .aggregation-list {
+                grid-template-columns: 1fr;
+            }
+            .trend-row {
+                grid-template-columns: 1fr;
+            }
+            table {
+                display: block;
+                overflow-x: auto;
+                white-space: nowrap;
+            }
         }
     </style>
 </head>
 <body>
-    <header>
-        <div class="container">
-            <h1>Rwanda Ministry of Health — Quarterly Health Bulletin</h1>
-            <p>Automated from DHIS2-like facility data · Period {{ report.current_period }} · Generated {{ report.generated_at }}</p>
-        </div>
-    </header>
+    <div class="shell">
+        <section class="hero">
+            <div class="hero-top">
+                <div>
+                    <div class="eyebrow">Working Prototype CODE</div>
+                    <h1>Rwanda Neonatal Intelligence Dashboard</h1>
+                    <p>
+                        Automated ministry bulletin built from the five provided Google Drive files only. This prototype
+                        blends clinical outcomes, governance quality, workforce capacity, infrastructure readiness, and
+                        operational performance into one executive view for rapid decision-making.
+                    </p>
+                </div>
+                <aside class="hero-card">
+                    <h3>Report metadata</h3>
+                    <div class="meta-list">
+                        <div class="meta-row"><span>Current period</span><strong>{{ report.current_period_label }}</strong></div>
+                        <div class="meta-row"><span>Comparison period</span><strong>{{ report.previous_period_label }}</strong></div>
+                        <div class="meta-row"><span>Generated</span><strong>{{ report.generated_at }}</strong></div>
+                        <div class="meta-row"><span>Files loaded</span><strong>{{ report.source_summary.files_loaded }}</strong></div>
+                        <div class="meta-row"><span>Last Drive sync</span><strong>{{ report.source_summary.synced_at }}</strong></div>
+                        <div class="meta-row"><span>Auto-refresh</span><strong>Every {{ auto_refresh_seconds }}s</strong></div>
+                        <div class="meta-row"><span>Reporting range</span><strong>{{ report.source_summary.reporting_range }}</strong></div>
+                    </div>
+                </aside>
+            </div>
 
-    <div class="container">
-        <div class="toolbar">
-            <form method="get">
-                <label for="period">Reporting period:</label>
-                <select name="period" id="period" onchange="this.form.submit()">
-                    {% for p in available_periods %}
-                    <option value="{{ p }}" {% if p == report.current_period %}selected{% endif %}>{{ p }}</option>
-                    {% endfor %}
-                </select>
-            </form>
-            <a href="{% url 'bulletin_json' %}?period={{ report.current_period }}">View JSON API</a>
-            <a class="secondary" href="{% url 'bulletin_export' %}?period={{ report.current_period }}">Download bulletin</a>
-        </div>
+            <div class="toolbar">
+                <form method="get" class="selector">
+                    <label for="granularity">Report unit</label>
+                    <select name="granularity" id="granularity" onchange="this.form.submit()">
+                        {% for g in available_granularities %}
+                        <option value="{{ g.key }}" {% if g.key == report.granularity %}selected{% endif %}>{{ g.label }} ({{ g.period_count }})</option>
+                        {% endfor %}
+                    </select>
+                </form>
+                <form method="get" class="selector">
+                    <input type="hidden" name="granularity" value="{{ report.granularity }}">
+                    <label for="period">Reporting {{ report.granularity_label|lower }}</label>
+                    <select name="period" id="period" onchange="this.form.submit()">
+                        {% for p in available_periods %}
+                        <option value="{{ p.key }}" {% if p.key == report.current_period %}selected{% endif %}>{{ p.label }}</option>
+                        {% endfor %}
+                    </select>
+                </form>
+                <a class="action" href="{% url 'bulletin_json' %}?granularity={{ report.granularity }}&period={{ report.current_period }}">Open JSON API</a>
+                <a class="action primary" href="{% url 'bulletin_export' %}?granularity={{ report.granularity }}&period={{ report.current_period }}">Download bulletin payload</a>
+                <a class="action" href="?granularity={{ report.granularity }}&period={{ report.current_period }}&refresh=1">Sync Drive now</a>
+            </div>
 
-        <section class="grid">
-            <div class="card">
-                <div class="metric-label">Total ANC visits</div>
-                <div class="metric">{{ report.maternal_summary.anc_visits_total }}</div>
+            <div class="sync-banner{% if report.source_summary.sync_status != 'synced' %} warning{% endif %}">
+                <div>
+                    <span class="sync-dot"></span>
+                    {% if report.source_summary.sync_status == 'synced' %}
+                    Live Google Drive sync enabled — new CSV/Excel files are read automatically.
+                    {% else %}
+                    {{ report.source_summary.sync_message }}
+                    {% endif %}
+                </div>
+                <div>Last local update: {{ report.source_summary.synced_at }}</div>
             </div>
-            <div class="card">
-                <div class="metric-label">Deliveries</div>
-                <div class="metric">{{ report.maternal_summary.deliveries }}</div>
-            </div>
-            <div class="card">
-                <div class="metric-label">Complications</div>
-                <div class="metric">{{ report.maternal_summary.complications }}</div>
-            </div>
-            <div class="card">
-                <div class="metric-label">Complication rate</div>
-                <div class="metric">{{ report.maternal_summary.complication_rate_pct }}%</div>
+
+            <div class="kpi-strip">
+                {% for metric in report.headline_metrics %}
+                <article class="kpi">
+                    <div class="label">{{ metric.label }}</div>
+                    <div class="value">{{ metric.value }}</div>
+                    <div class="delta {{ metric.delta_direction }}">
+                        {% if metric.delta_direction == "up" %}Up{% elif metric.delta_direction == "down" %}Down{% else %}Flat{% endif %}
+                        {{ metric.delta }}
+                        {% if metric.label != "Avg readiness score" and metric.label != "Avg stockout days" and metric.label != "Facilities covered" %}%{% endif %}
+                    </div>
+                    <div class="context">{{ metric.context }}</div>
+                </article>
+                {% endfor %}
             </div>
         </section>
 
-        <section class="card" style="margin-bottom: 1.5rem;">
-            <h2>Top 10 Facilities by Patient Volume</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Rank</th>
-                        <th>Facility</th>
-                        <th>District</th>
-                        <th>Patient volume</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for row in report.top_facilities %}
-                    <tr>
-                        <td>{{ row.rank }}</td>
-                        <td>{{ row.facility_name }}</td>
-                        <td>{{ row.district }}</td>
-                        <td>{{ row.patient_volume }}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+        <section class="summary-grid">
+            {% for item in report.strategic_summary %}
+            <article class="note">
+                <h3>{{ item.title }}</h3>
+                <p>{{ item.detail }}</p>
+            </article>
+            {% endfor %}
         </section>
 
-        <section class="card" style="margin-bottom: 1.5rem;">
-            <h2>Facility Performance Scores</h2>
-            <p style="color: var(--muted); margin-top: 0;">Weighted: 40% timeliness + 60% reporting completeness (proxy from mandatory fields).</p>
+        <section class="panel" style="margin-bottom: 20px;">
+            <div class="panel-header">
+                <div>
+                    <h2>Advanced Aggregation Intelligence</h2>
+                    <p>{{ report.source_summary.aggregation_path }} with {{ report.comparison_label }} comparisons and recomputed outcome rates.</p>
+                </div>
+            </div>
+            <div class="aggregation-list">
+                {% for item in report.advanced_aggregations %}
+                <article class="aggregation-item">
+                    <div class="period-chip">{{ item.label }}</div>
+                    <strong>{{ item.value }}</strong>
+                    <div class="small">{{ item.context }}</div>
+                </article>
+                {% endfor %}
+            </div>
+        </section>
+
+        <section class="grid-2">
+            <article class="panel">
+                <div class="panel-header">
+                    <div>
+                        <h2>Maternal and Neonatal Indicators</h2>
+                        <p>Core bulletin metrics synthesized from the clinical dataset for the selected {{ report.granularity_label|lower }}.</p>
+                    </div>
+                </div>
+                <div class="metric-grid">
+                    <div class="mini-card">
+                        <div class="mini-label">Deliveries</div>
+                        <div class="mini-value">{{ report.maternal_summary.deliveries }}</div>
+                    </div>
+                    <div class="mini-card">
+                        <div class="mini-label">Live births</div>
+                        <div class="mini-value">{{ report.maternal_summary.live_births }}</div>
+                    </div>
+                    <div class="mini-card">
+                        <div class="mini-label">Stillbirths</div>
+                        <div class="mini-value">{{ report.maternal_summary.stillbirths }}</div>
+                    </div>
+                    <div class="mini-card">
+                        <div class="mini-label">Neonatal mortality rate</div>
+                        <div class="mini-value">{{ report.maternal_summary.neonatal_mortality_rate }}/1k</div>
+                    </div>
+                    <div class="mini-card">
+                        <div class="mini-label">Preterm rate</div>
+                        <div class="mini-value">{{ report.maternal_summary.preterm_rate_pct }}%</div>
+                    </div>
+                    <div class="mini-card">
+                        <div class="mini-label">Low birth weight rate</div>
+                        <div class="mini-value">{{ report.maternal_summary.low_birth_weight_rate_pct }}%</div>
+                    </div>
+                </div>
+            </article>
+
+            <article class="panel">
+                <div class="panel-header">
+                    <div>
+                        <h2>{{ report.granularity_label }} Trendline</h2>
+                        <p>Trend window ending in the selected {{ report.granularity_label|lower }}.</p>
+                    </div>
+                </div>
+                <div class="trend-bars">
+                    {% for row in report.monthly_trends %}
+                    <div class="trend-row">
+                        <div>
+                            <strong>{{ row.label }}</strong>
+                            <div class="small">{{ row.neonatal_mortality_rate }}/1k mortality</div>
+                        </div>
+                        <div class="bar-shell">
+                            <div class="bar-fill" style="width: {{ row.delivery_width_pct }}%;"></div>
+                        </div>
+                        <div>
+                            <strong>{{ row.deliveries }}</strong>
+                            <div class="small">{{ row.stillbirth_rate }}/1k stillbirth</div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </article>
+        </section>
+
+        <section class="panel" style="margin-bottom: 20px;">
+            <div class="panel-header">
+                <div>
+                    <h2>Hierarchical Rollup Explorer</h2>
+                    <p>Lowest loaded unit is monthly; higher periods are created by summing counts first, then recalculating rates from numerators and denominators.</p>
+                </div>
+            </div>
+            <div class="rollup-grid">
+                <div class="metric-grid">
+                    <div class="mini-card">
+                        <div class="mini-label">YTD deliveries</div>
+                        <div class="mini-value">{{ report.rollup_summary.ytd_deliveries }}</div>
+                    </div>
+                    <div class="mini-card">
+                        <div class="mini-label">YTD mortality</div>
+                        <div class="mini-value">{{ report.rollup_summary.ytd_neonatal_mortality_rate }}/1k</div>
+                    </div>
+                    <div class="mini-card">
+                        <div class="mini-label">Annualized forecast</div>
+                        <div class="mini-value">{{ report.rollup_summary.annualized_delivery_forecast }}</div>
+                    </div>
+                    <div class="mini-card">
+                        <div class="mini-label">Year completeness</div>
+                        <div class="mini-value">{{ report.rollup_summary.data_completeness_pct }}%</div>
+                    </div>
+                    <div class="mini-card">
+                        <div class="mini-label">Selected share</div>
+                        <div class="mini-value">{{ report.rollup_summary.selected_period_share_of_year_pct }}%</div>
+                    </div>
+                    <div class="mini-card">
+                        <div class="mini-label">Facility coverage</div>
+                        <div class="mini-value">{{ report.rollup_summary.facility_reporting_coverage_pct }}%</div>
+                    </div>
+                </div>
+                <div>
+                    {% if report.period_breakdown %}
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Child period</th>
+                                <th>Deliveries</th>
+                                <th>Share</th>
+                                <th>Cumulative</th>
+                                <th>Mortality</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in report.period_breakdown %}
+                            <tr>
+                                <td><strong>{{ row.label }}</strong></td>
+                                <td>{{ row.deliveries }}</td>
+                                <td>{{ row.share_pct }}%</td>
+                                <td>{{ row.cumulative_share_pct }}%</td>
+                                <td>{{ row.neonatal_mortality_rate }}/1k</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    {% else %}
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Month</th>
+                                <th>Quarter</th>
+                                <th>Deliveries</th>
+                                <th>Share of year</th>
+                                <th>Mortality</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in report.rollup_summary.monthly_contributions %}
+                            <tr>
+                                <td><strong>{{ row.label }}</strong></td>
+                                <td>{{ row.quarter }}</td>
+                                <td>{{ row.deliveries }}</td>
+                                <td>{{ row.share_of_year_pct }}%</td>
+                                <td>{{ row.neonatal_mortality_rate }}/1k</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    {% endif %}
+                </div>
+            </div>
+        </section>
+
+        <section class="grid-2">
+            <article class="panel">
+                <div class="panel-header">
+                    <div>
+                        <h2>Top Facilities by Delivery Volume</h2>
+                        <p>High-volume sites prioritized for supervision and quality follow-up.</p>
+                    </div>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Facility</th>
+                            <th>Location</th>
+                            <th>Deliveries</th>
+                            <th>Live births</th>
+                            <th>Mortality</th>
+                            <th>Score</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in report.top_facilities %}
+                        <tr>
+                            <td>{{ row.rank }}</td>
+                            <td>
+                                <strong>{{ row.facility_name }}</strong><br>
+                                <span class="small">{{ row.facility_id }}</span>
+                            </td>
+                            <td>{{ row.district }}, {{ row.province }}</td>
+                            <td>{{ row.deliveries }}</td>
+                            <td>{{ row.live_births }}</td>
+                            <td>{{ row.neonatal_mortality_rate }}/1k</td>
+                            <td>
+                                <div>{{ row.overall_score }}</div>
+                                <span class="badge {{ row.performance_band|slugify }}">{{ row.performance_band }}</span>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </article>
+
+            <article class="panel">
+                <div class="panel-header">
+                    <div>
+                        <h2>Risk Watchlist</h2>
+                        <p>Facilities where burden and fragility overlap.</p>
+                    </div>
+                </div>
+                <div class="risk-list">
+                    {% for row in report.risk_alerts %}
+                    <article class="risk">
+                        <div class="risk-top">
+                            <div class="risk-title">{{ row.facility_name }}</div>
+                            <div class="risk-points">{{ row.risk_points }} risk pts</div>
+                        </div>
+                        <div class="small">{{ row.district }}, {{ row.province }}</div>
+                        <p class="small">Mortality {{ row.neonatal_mortality_rate }}/1k · Stockouts {{ row.stockout_days }} days</p>
+                        <p>{{ row.issues }}</p>
+                    </article>
+                    {% endfor %}
+                </div>
+            </article>
+        </section>
+
+        <section class="grid-2">
+            <article class="panel">
+                <div class="panel-header">
+                    <div>
+                        <h2>Provincial Performance Overview</h2>
+                        <p>Composite readiness scores by province, weighted by real facility conditions.</p>
+                    </div>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Province</th>
+                            <th>Facilities</th>
+                            <th>Deliveries</th>
+                            <th>Avg score</th>
+                            <th>Mortality</th>
+                            <th>Stockouts</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in report.provincial_overview %}
+                        <tr>
+                            <td><strong>{{ row.province }}</strong></td>
+                            <td>{{ row.facilities }}</td>
+                            <td>{{ row.deliveries }}</td>
+                            <td class="scorebar">
+                                {{ row.avg_score }}
+                                <div class="bar-shell">
+                                    <div class="bar-fill" style="width: {{ row.score_width_pct }}%;"></div>
+                                </div>
+                            </td>
+                            <td>{{ row.neonatal_mortality_rate }}/1k</td>
+                            <td>{{ row.avg_stockout_days }} days</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </article>
+
+            <article class="panel">
+                <div class="panel-header">
+                    <div>
+                        <h2>Momentum vs {{ report.previous_period }}</h2>
+                        <p>{{ report.comparison_label }} changes in volume and composite score.</p>
+                    </div>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Facility</th>
+                            <th>Current</th>
+                            <th>Previous</th>
+                            <th>Delivery delta</th>
+                            <th>Score delta</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in report.trend_analysis %}
+                        <tr>
+                            <td>
+                                <strong>{{ row.facility_name }}</strong><br>
+                                <span class="small">{{ row.district }}, {{ row.province }}</span>
+                            </td>
+                            <td>{{ row.current_deliveries }}</td>
+                            <td>{{ row.previous_deliveries }}</td>
+                            <td>{{ row.deliveries_change }} ({{ row.deliveries_change_pct }}%)</td>
+                            <td>{{ row.score_change }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </article>
+        </section>
+
+        <section class="panel">
+            <div class="panel-header">
+                <div>
+                    <h2>Facility Performance Leaders</h2>
+                    <p>Composite scoring blends clinical outcomes, governance, workforce, operations, and infrastructure readiness.</p>
+                </div>
+            </div>
             <table>
                 <thead>
                     <tr>
                         <th>Facility</th>
-                        <th>District</th>
-                        <th>Timeliness</th>
-                        <th>Completeness</th>
+                        <th>Tier</th>
                         <th>Overall</th>
-                        <th>Status</th>
+                        <th>Outcomes</th>
+                        <th>Governance</th>
+                        <th>Workforce</th>
+                        <th>Operations</th>
+                        <th>Infrastructure</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for row in report.performance_scores %}
                     <tr>
-                        <td>{{ row.facility_name }}</td>
-                        <td>{{ row.district }}</td>
-                        <td>{{ row.timeliness_score }}</td>
-                        <td>{{ row.completeness_score }}</td>
-                        <td><strong>{{ row.overall_score }}</strong></td>
                         <td>
-                            {% if row.submitted_on_time and row.report_complete %}
-                            <span class="badge ok">On track</span>
-                            {% else %}
-                            <span class="badge warn">Needs follow-up</span>
-                            {% endif %}
+                            <strong>{{ row.facility_name }}</strong><br>
+                            <span class="small">{{ row.district }}, {{ row.province }}</span>
                         </td>
+                        <td>{{ row.tier_level }}</td>
+                        <td>
+                            {{ row.overall_score }}<br>
+                            <span class="badge {{ row.performance_band|slugify }}">{{ row.performance_band }}</span>
+                        </td>
+                        <td>{{ row.outcomes_score }}</td>
+                        <td>{{ row.governance_score }}</td>
+                        <td>{{ row.workforce_score }}</td>
+                        <td>{{ row.operations_score }}</td>
+                        <td>{{ row.infrastructure_score }}</td>
                     </tr>
                     {% endfor %}
                 </tbody>
             </table>
         </section>
 
-        <section class="card">
-            <h2>Trend Analysis vs {{ report.previous_period }}</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Facility</th>
-                        <th>Current volume</th>
-                        <th>Previous volume</th>
-                        <th>Change</th>
-                        <th>% Change</th>
-                        <th>Deliveries Δ</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for row in report.trend_analysis %}
-                    <tr>
-                        <td>{{ row.facility_name }}</td>
-                        <td>{{ row.current_volume }}</td>
-                        <td>{{ row.previous_volume }}</td>
-                        <td>{{ row.volume_change }}</td>
-                        <td class="{% if row.volume_change_pct >= 0 %}up{% else %}down{% endif %}">
-                            {{ row.volume_change_pct }}%
-                        </td>
-                        <td>{{ row.deliveries_change }}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+        <section class="panel" style="margin-top: 22px;">
+            <div class="panel-header">
+                <div>
+                    <h2>Data Provenance</h2>
+                    <p>Every dashboard refresh re-reads all CSV and Excel files from the Google Drive folder.</p>
+                </div>
+            </div>
+            <div class="split">
+                <div class="small">
+                    Source folder:
+                    <a href="{{ report.source_url }}" target="_blank" rel="noreferrer">{{ report.source_url }}</a>
+                </div>
+                <div class="small">{{ report.source_summary.facility_count }} facilities · {{ report.source_summary.clinical_rows }} clinical rows · {{ report.source_summary.supplemental_files }} supplemental file(s)</div>
+            </div>
+            <div class="catalog-grid">
+                {% for item in report.source_summary.file_catalog %}
+                <div class="catalog-item">
+                    <strong>{{ item.name }}</strong>
+                    <div class="catalog-role">{{ item.role }}</div>
+                </div>
+                {% endfor %}
+            </div>
+            <div class="files">
+                {% for file_name in report.source_files %}
+                <span class="file-chip">{{ file_name }}</span>
+                {% endfor %}
+            </div>
         </section>
 
         <footer>
-            Sand Health Operating System prototype · Replaces ~40 hrs/month manual bulletin compilation
+            Advanced prototype for Sand Technologies FDE assignment · Auto-refreshes every {{ auto_refresh_seconds }} seconds to reflect newly added Drive files
         </footer>
     </div>
+    <script>
+        // Keep the selected period while automatically picking up new Google Drive files.
+        (function () {
+            const refreshSeconds = {{ auto_refresh_seconds }};
+            const period = "{{ report.current_period|escapejs }}";
+            window.setTimeout(function () {
+                const url = new URL(window.location.href);
+                url.searchParams.set("granularity", "{{ report.granularity|escapejs }}");
+                url.searchParams.set("period", period);
+                url.searchParams.delete("refresh");
+                const refreshCount = Number(sessionStorage.getItem("driveRefreshCount") || "0") + 1;
+                sessionStorage.setItem("driveRefreshCount", String(refreshCount));
+                // Attempt a remote Drive sync only every 5th auto-refresh to avoid rate limits.
+                if (refreshCount % 5 === 0) {
+                    url.searchParams.set("refresh", "1");
+                }
+                window.location.href = url.toString();
+            }, refreshSeconds * 1000);
+        })();
+    </script>
 </body>
 </html>

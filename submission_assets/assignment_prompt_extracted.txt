@@ -1,0 +1,820 @@
+--- PAGE 1 ---
+ 
+ 
+    
+Recruitment  Assignment  Role:  Forward  Deployed  Engineer   Location:  Africa   
+careers.sandtech.com  
+
+
+--- PAGE 2 ---
+ 
+Forward  Deployed  Engineer  
+Recruitment  Assignment 
+The  purpose  of  this  assignment  is  two-fold:  
+●  To  give  you  a  better  sense  of  the  role  of  the  Forward  Deployed  Engineer ●  To  give  us  a  sense  of  whether  you  would  be  a  good  ﬁt  for  the  role  The  assignment  is  designed  to  be  intentionally  diverse  and  fast-paced,  much  like  
+the
+ 
+actual
+ 
+role.
+ 
+  As  you  work  through  this  assignment,  note  that:  ●  The  structure  of  the  assignment  is  intentionally  broad  to  give  you  the  freedom  to  
+think
+ 
+about
+ 
+the
+ 
+assignment
+ 
+on
+ 
+your
+ 
+own
+ 
+terms.
+ 
+Make
+ 
+sure
+ 
+to
+ 
+include
+ 
+any
+ 
+assumptions
+ 
+you
+ 
+are
+ 
+making
+ 
+as
+ 
+you
+ 
+complete
+ 
+this
+ 
+assignment. ●  We  understand  you  don’t  have  enough  context  on  our  operations  and  our  
+business.
+ 
+Working
+ 
+with
+ 
+uncertainty
+ 
+and
+ 
+partial
+ 
+information
+ 
+is
+ 
+a
+ 
+part
+ 
+of
+ 
+this
+ 
+assignment.
+ 
+Be
+ 
+sure
+ 
+to
+ 
+highlight
+ 
+the
+ 
+assumptions
+ 
+you’re
+ 
+making
+ 
+and
+ 
+leave
+ 
+comments
+ 
+so
+ 
+we
+ 
+can
+ 
+collaborate
+ 
+with
+ 
+you. ●  We  understand  that  in  a  perfect  world,  you’d  have  more  time  to  research  and  
+complete
+ 
+this
+ 
+task.
+ 
+Understanding
+ 
+constraints,
+ 
+prioritising,
+ 
+and
+ 
+demonstrating
+ 
+a
+ 
+“done,
+ 
+not
+ 
+perfect”
+ 
+mindset
+ 
+are
+ 
+part
+ 
+of
+ 
+what
+ 
+we
+ 
+look
+ 
+out
+ 
+for.
+ 
+So,
+ 
+in
+ 
+places
+ 
+where
+ 
+you
+ 
+don’t
+ 
+have
+ 
+enough
+ 
+time
+ 
+to
+ 
+complete
+ 
+the
+ 
+task
+ 
+to
+ 
+your
+ 
+standards,
+ 
+please
+ 
+share
+ 
+your
+ 
+thought
+ 
+process
+ 
+and
+ 
+your
+ 
+next
+ 
+steps
+ 
+if
+ 
+you
+ 
+have
+ 
+more
+ 
+time.
+   What  you  share  here  is  only  for  assignment  purposes.  We  do  not  intend  to  use  your  
+submission
+ 
+beyond
+ 
+this
+ 
+recruitment
+ 
+process.
+   Aside  from  the  submission  deadline,  the  parameters  of  this  assignment  are  purposefully  
+broad
+ 
+and
+ 
+open
+ 
+to
+ 
+your
+ 
+interpretation
+ 
+and
+ 
+understanding.
+  We’d  like  you  to  return  your  assignment  submission  in  one  PDF  document  on  the  date  
+stated
+ 
+in
+ 
+the
+ 
+email.
+ 
+Please
+ 
+let
+ 
+us
+ 
+know
+ 
+at
+ 
+least
+ 
+24
+ 
+hours
+ 
+in
+ 
+advance
+ 
+if
+ 
+you
+ 
+won’t
+ 
+be
+ 
+able
+ 
+to
+ 
+submit
+ 
+it
+ 
+on
+ 
+time.
+ 
+  We  do  not  take  the  evaluation  for  this  role  lightly.  We  appreciate  your  time,  effort  and  
+understanding.
+ 
+  We  look  forward  to  receiving  your  assignment!    All  the  best!     
+ 
+©  2024  Sand  Technologies.  All  Rights  Reserved.  www.sandtech.com  |   careers.sandtech.com  
+
+
+--- PAGE 3 ---
+ 
+Background 
+The  Health  Operating  System  (HOS)  enables  multiple  data-focused  teams  to  manage  
+and
+ 
+leverage
+ 
+healthcare
+ 
+data
+ 
+effectively,
+ 
+building
+ 
+powerful
+ 
+intelligence
+ 
+to
+ 
+help
+ 
+healthcare
+ 
+administrators
+ 
+optimize
+ 
+service
+ 
+delivery,
+ 
+generate
+ 
+insights,
+ 
+and
+ 
+drive
+ 
+better
+ 
+decisions.
+ 
+As
+ 
+a
+ 
+Forward
+ 
+Deployed
+ 
+Engineer,
+ 
+you
+ 
+will
+ 
+embed
+ 
+with
+ 
+clients
+ 
+to
+ 
+prove
+ 
+value
+ 
+fast,
+ 
+build
+ 
+trust,
+ 
+and
+ 
+deliver
+ 
+tangible
+ 
+ROI
+ 
+through
+ 
+rapid
+ 
+solution
+ 
+engineering.
+ 
+Assessment  Philosophy 
+This  assessment  tests  your  ability  in  the  FDE  engagement  lifecycle:  
+·     Part  1:  Problem  Decomposition  and  Scoping   ·     Part  2:  Rapid  Prototyping  &  Iteration  ·     Part  3:  Optimization  &  Hardening  for  Production  ·     Part  4:  Deployment  &  Knowledge  Transfer   
+We  want  to  see  you  SCOPE  and  BUILD.  Focus  80%  of  your  time  on  Parts  1  and  2.
+ 
+The  Scenerio  
+You  are  being  deployed   to  one  of  our  expansion   countries  (i.e.  Rwanda)   as  part  of  a  
+2-person
+ 
+FDE
+ 
+team,
+ 
+supported
+ 
+by
+ 
+a
+ 
+solutions
+ 
+manager
+ 
+and
+ 
+country
+ 
+director.
+ 
+The
+ 
+Ministry
+ 
+of
+ 
+Health
+ 
+has
+ 
+signed
+ 
+an
+ 
+MoU
+ 
+with
+ 
+Sand
+ 
+to
+ 
+"improve
+ 
+health
+ 
+data
+ 
+systems
+ 
+and
+ 
+decision-making
+ 
+capabilities."
+ 
+The
+ 
+Solutions
+ 
+manager
+ 
+has
+ 
+identiﬁed
+ 
+the
+ 
+following
+ 
+key
+ 
+use
+ 
+cases
+ 
+and
+ 
+solutions
+ 
+opportunities:
+ 
+-  Currently,  Maternal  and  Neonatal  Mortality  rates  are  above  goals  set  out  by  the  
+WHO,
+ 
+Sand
+ 
+Health
+ 
+Operating
+ 
+System
+ 
+(SHOS)
+ 
+can
+ 
+provide
+ 
+immediate
+ 
+value
+ 
+by
+ 
+providing
+ 
+situational
+ 
+awareness
+ -  Currently,  there  is  no  single  view  of  the  healthcare  system,  and  if  interventions  are  
+improving
+ 
+the
+ 
+system.
+ 
+Deploying
+ 
+the
+ 
+SHOS
+ 
+Health
+ 
+Atlas
+ 
+provides
+ 
+the
+ 
+ability
+ 
+to
+ 
+visualize
+ 
+and
+ 
+provides
+ 
+situational
+ 
+awareness
+ 
+for
+ 
+improved
+ 
+decision-making.
+ 
+ 
+The  following  datasets  are  available 
+●  DHIS2  -  used  for  monthly  reporting  (with  2-3  week  delays)  ●  45  hospitals  -  use  "HealthTrack"  EMR  (buggy,  local  servers)  ●  30  clinics  -  use  OpenMRS  ●  175  rural  facilities  -  paper  only  ●  Separate  systems  -  TB  program,  HIV  program  (CommCare),  immunisation  (Excel)  ●  Infrastructure  -  unreliable  power  (4-6  hrs/day  rural),  spotty  3G/4G   
+©  2024  Sand  Technologies.  All  Rights  Reserved.  www.sandtech.com  |   careers.sandtech.com  
+
+
+--- PAGE 4 ---
+ Your  Internal  Support  Network: 
+●  Your  Country  Team:  1  other  FDE,  1  Solutions  Manager,  1  Launcher/Country  Director,  
+1
+ 
+Operations
+ 
+Specialist
+ ●  FDE  Lead:  Your  performance  manager  and  escalation  point  ●  Central  FDEs:  Specialist  support  for  technical  challenges  and  pattern  
+documentation
+ ●  Product  Managers:  Own  the  product  roadmap  and  reusable  patterns   Sand  Existing  Healthcare  Products  (that  you  should  leverage):  
+●  Health  Atlas  -  Geographic  mapping  and  facility  intelligence  ●  Health  Outcome  Tracker  -  Patient  outcome  analytics  ●  Health  Insight  Engine  -  AI-powered  analytics  and  alerts  ●  Analytics  Template  Toolkit  -  Pre-built  reporting  templates  with  Apache  Superset  ●  HealthOS  Data  Models  -  Standard  healthcare  data  transformations 
+The  Initial  Problem 
+Week  1  Arrival:  You  arrive  on  Monday.  The  MoH  Director  says,  "Our  data  is  a  mess.  We  
+cannot
+ 
+make
+ 
+good
+ 
+decisions.
+ 
+We
+ 
+need
+ 
+you
+ 
+to
+ 
+ﬁx
+ 
+it."
+ 
+After  Week  1  Discovery,  you  identify  THREE  potential  problems:  
+Problem  A:  The  MoH  spends  40  hours/month  manually  compiling  a  "Quarterly  Health  
+Bulletin"
+ 
+from
+ 
+DHIS2
+ 
+Excel
+ 
+exports.
+ 
+They
+ 
+want
+ 
+it
+ 
+automated.
+ 
+The  bulletin  includes:  Top  10  facilities  by  patient  volume,  maternal  health  indicators  (ANC  
+visits,
+ 
+deliveries,
+ 
+complications),
+ 
+facility
+ 
+performance
+ 
+scores
+ 
+(reporting
+ 
+completeness,
+ 
+timeliness),
+ 
+trend
+ 
+analysis
+ 
+vs.
+ 
+previous
+ 
+quarters.
+ 
+Problem  B:  District  health  ofﬁcers  cannot  see  real-time  facility  status  (which  are  
+operational,
+ 
+which
+ 
+have
+ 
+stockouts,
+ 
+where
+ 
+disease
+ 
+outbreaks
+ 
+are
+ 
+happening).
+ 
+They
+ 
+make
+ 
+decisions
+ 
+based
+ 
+on
+ 
+3-week-old
+ 
+data.
+ 
+Problem  C:  The  TB  program  and  HIV  program  use  separate  systems  (CommCare).  
+Co-infected
+ 
+patients
+ 
+fall
+ 
+through
+ 
+the
+ 
+cracks
+ 
+because
+ 
+no
+ 
+one
+ 
+has
+ 
+a
+ 
+uniﬁed
+ 
+view.
+ 
+ 
+ 
+©  2024  Sand  Technologies.  All  Rights  Reserved.  www.sandtech.com  |   careers.sandtech.com  
+
+
+--- PAGE 5 ---
+ 
+What  to  Prepare   
+Deliverable  1:  Problem  Decomposing  and  Scoping   
+Prepare  a  scoping  document  that  covers:  
+Section  1:  Your  Discovery  Process  
+●  Who  you  would  talk  to  in  Week  1  and  what  you  would  ask  ●  What  patterns  would  you  look  for  when  decomposing  "our  data  is  a  mess"  ●  What  you  would  observe  directly  (not  just  hear  about)  
+Section  2:  Problem  Selection  
+●  Which  of  the  3  problems  would  you  choose  to  solve  in  a  6-week  sprint  (and  
+why)?
+ ●  The  speciﬁc,  measurable  outcome  you  will  deliver  ●  What  is  explicitly  OUT  OF  SCOPE  ●  Key  assumptions  and  what  needs  validation  in  Week  2  ●  Your  success  metric  ●  Fallback  plan  if  the  problem  is  harder  than  expected  
+Deliverable  2:  Rapid  Prototyping 
+For  this  part,  assume  you  chose  Problem  A  (Quarterly  Health  Bulletin  automation).  
+Prepare:  
+Section  1:  Solution  Design  &  Architecture  
+●  Simple  architecture  diagram  showing  data  ﬂow  ●  Which  Sand  products  you  will  use  and  why  ●  What  you  will  build  custom  (if  anything)  and  justiﬁcation  ●  Build  vs.  buy  decisions  for  each  component   
+Section  2:  Working  Prototype  CODE  
+Required:  Build  a  solution  that:  
+●  Reads  sample  DHIS2-like  data  (provided  data)  ●  Calculates  at  least  3  bulletin  metrics  (e.g.,  top  facilities,  maternal  indicators,  
+performance
+ 
+scores)
+ ●  Outputs  results  in  a  usable  format  (simple  HTML,  or  dashboard)  ●  Submit  working  code  for  the  solution  
+ 
+©  2024  Sand  Technologies.  All  Rights  Reserved.  www.sandtech.com  |   careers.sandtech.com  
+
+
+--- PAGE 6 ---
+  Code  Expectations:  
+●  Use  whatever  stack  you  are  fastest  in  (Python  +  Pandas,  JavaScript,  SQL,  etc.)  ●  Focus  on  proving  the  concept,  not  production  quality  ●  Comment  your  code  to  show  decision-making  
+Section  3:  Implementation  Notes  
+●  What  shortcuts  did  you  take  to  move  fast?  ●  What  you  would  show  in  Week  3  (what  works,  what  is  broken)  ●  What  you  learned  from  building  this  
+Deliverable  3:  Production  Hardening   
+List  the  top  5  things  you  would  ﬁx/add  to  make  your  prototype  production-ready.  For  
+each:
+ 
+(1)
+ 
+What
+ 
+is
+ 
+the
+ 
+concern?
+ 
+(2)
+ 
+How
+ 
+would
+ 
+you
+ 
+address
+ 
+it?
+ 
+Deliverable  4:  Handover  &  Deployment 
+●  What  3  things  would  you  document  for  the  MoH  IT  team  ●  Who  needs  training  and  what  topics  to  cover  ●  Your  exit  criteria  (how  you  know  when  to  transition  out) 
+Submission  Requirements  
+ 
+Submit  the  following 
+●  Your  scoping  and  design  documents  ●  Working  code  with  sample  data  ●  README  with  setup/run  instructions  ●  Output  demonstrating  your  solution  
+What's  Next:  
+Be  prepared  to  present  your  approach  and  code  in  the  live  interview.  You  will  be  asked  
+to
+ 
+walk
+ 
+through
+ 
+your
+ 
+decisions,
+ 
+respond
+ 
+to
+ 
+technical
+ 
+scenarios,
+ 
+and
+ 
+demonstrate
+ 
+your
+ 
+problem-solving
+ 
+process.
+ 
+Tips  for  Success:  
+●  Focus  80%  of  your  time  on  Parts  1  and  2  (scoping  and  building)  ●  Your  code  should  work  and  demonstrate  the  concept  
+ 
+©  2024  Sand  Technologies.  All  Rights  Reserved.  www.sandtech.com  |   careers.sandtech.com  
+
+
+--- PAGE 7 ---
+ ●  Show  your  thinking  process,  not  just  ﬁnal  answers  ●  Be  speciﬁc  -  reference  actual  Sand  products  and  realistic  technical  choices  
+ GOOD  LUCK!    
+ 
+©  2024  Sand  Technologies.  All  Rights  Reserved.  www.sandtech.com  |   careers.sandtech.com  

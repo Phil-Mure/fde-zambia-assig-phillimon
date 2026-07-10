@@ -1,3 +1,8 @@
-Django>=5.0,<7.0
-python-docx>=1.1.0
-gunicorn
+Django>=5.0,<7.0
+python-docx>=1.1.0
+gunicorn
+requests>=2.32.0
+beautifulsoup4>=4.12.0
+openpyxl>=3.1.5
+pandas>=3.0.0
+whitenoise>=6.12.0

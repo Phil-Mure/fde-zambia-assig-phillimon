@@ -1,6 +1,8 @@
 """
 Generate the Sand Healthcare FDE assignment submission as a Word document.
 Run: python generate_submission_doc.py
+
+Optional: run capture_screenshots.py first to refresh dashboard images.
 """
 from pathlib import Path
 
@@ -8,8 +10,12 @@ from docx import Document
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 from docx.shared import Inches, Pt
 
+from bulletin.services import build_bulletin
 
-OUTPUT = Path(__file__).resolve().parent / "Sand_FDE_Assignment_Submission.docx"
+PROJECT_ROOT = Path(__file__).resolve().parent
+OUTPUT = PROJECT_ROOT / "Sand_FDE_Assignment_Submission.docx"
+SCREENSHOT_DIR = PROJECT_ROOT / "submission_assets"
+DATA_SOURCE_URL = "https://drive.google.com/drive/folders/1DPk6jKSO_bbnhonUX6S91kLWZVulWTmA"
 
 
 def add_heading(doc: Document, text: str, level: int = 1) -> None:
@@ -26,8 +32,19 @@ def add_numbered(doc: Document, items: list[str]) -> None:
         doc.add_paragraph(item, style="List Number")
 
 
+def add_image_if_exists(doc: Document, image_path: Path, caption: str, width_inches: float = 6.5) -> None:
+    if image_path.exists():
+        doc.add_picture(str(image_path), width=Inches(width_inches))
+        caption_paragraph = doc.add_paragraph(caption)
+        caption_paragraph.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        caption_paragraph.runs[0].italic = True
+    else:
+        doc.add_paragraph(f"[Screenshot pending: {image_path.name}]")
+
+
 def build_document() -> Document:
     doc = Document()
+    sample_report = build_bulletin("2024Q4")
 
     title = doc.add_heading("Sand Technologies — Forward Deployed Engineer Assignment", 0)
     title.alignment = WD_ALIGN_PARAGRAPH.CENTER
@@ -165,13 +182,14 @@ def build_document() -> Document:
     add_bullets(
         doc,
         [
-            "Assumption: DHIS2 exports contain sufficient fields for bulletin metrics today.",
-            "Validate: Compare prototype output to last published bulletin with MoH analyst.",
-            "Assumption: Performance scoring weights (40% timeliness / 60% completeness) "
-            "match MoH expectations.",
-            "Validate: Workshop with Planning unit to confirm weighting and thresholds.",
-            "Assumption: Quarterly period labels (e.g. 2025Q1) align with DHIS2 period codes.",
-            "Validate: Pull metadata from DHIS2 API with IT admin.",
+            "Assumption: The five provided source files contain enough structure to model "
+            "a quarterly neonatal bulletin while DHIS2 API access is pending.",
+            "Validate: Compare prototype aggregates to the last published bulletin with MoH analysts.",
+            "Assumption: Composite readiness scoring weights (35% outcomes / 20% governance / "
+            "20% workforce / 15% operations / 10% infrastructure) are directionally acceptable.",
+            "Validate: Workshop with Planning unit to tune weights and thresholds.",
+            "Assumption: Monthly clinical rows can be rolled into calendar quarters for bulletin periods.",
+            "Validate: Confirm quarter definitions and partial-quarter handling with DHIS2 administrators.",
         ],
     )
 
@@ -201,20 +219,26 @@ def build_document() -> Document:
 
     doc.add_paragraph("Architecture overview (data flow):")
     doc.add_paragraph(
-        "[DHIS2 / CSV Export] → [Ingestion Layer] → [HealthOS Data Models] → "
-        "[Bulletin Metrics Engine] → [Outputs: HTML Dashboard | JSON API | Superset Feed]"
+        "[Google Drive Source Files: clinical_neonatal | facilities | governance | "
+        "healthcare_workers | operations] → [Drive Sync + CSV/XLSX Loader] → "
+        "[HealthOS-style Join Layer] → [Bulletin Metrics Engine] → "
+        "[Outputs: Executive HTML Dashboard | JSON API | Export Payload]"
     ).runs[0].font.name = "Consolas"
+
+    doc.add_paragraph("Source data folder (assignment dataset):")
+    doc.add_paragraph(DATA_SOURCE_URL)
 
     doc.add_paragraph("Sand products leveraged:")
     add_bullets(
         doc,
         [
-            "HealthOS Data Models — standardize facility indicators (volume, ANC, deliveries) "
-            "into a consistent schema before aggregation.",
+            "HealthOS Data Models — normalize five facility-level source files into one "
+            "joined reporting schema before aggregation.",
             "Analytics Template Toolkit (Apache Superset) — Phase 2 self-service exploration; "
             "prototype exposes JSON API for Superset dataset connection.",
-            "Health Insight Engine — future: anomaly flags on complication rate spikes "
-            "(not in Week 2 prototype).",
+            "Health Insight Engine — future: anomaly flags on neonatal mortality spikes and "
+            "stockout clusters (risk watchlist is the Week 2 precursor).",
+            "Health Atlas — future: map provincial readiness and referral burden once Problem B starts.",
         ],
     )
 
@@ -222,10 +246,10 @@ def build_document() -> Document:
     add_bullets(
         doc,
         [
-            "Django bulletin service — MoH-specific metric definitions and bulletin layout; "
-            "not available off-the-shelf.",
-            "Quarter-over-quarter trend logic with facility matching — custom business rules.",
-            "Performance score weighting — configurable MoH policy, built as code for sprint speed.",
+            "Django bulletin service — MoH-specific metric definitions, quarter logic, and bulletin layout.",
+            "Google Drive ingestion layer — keeps the prototype reproducible from the exact assignment dataset.",
+            "Multi-source join and composite scoring — combines clinical, governance, workforce, and operations signals.",
+            "Executive dashboard UI — ministry-facing narrative view not available off-the-shelf in Superset alone.",
         ],
     )
 
@@ -250,7 +274,7 @@ def build_document() -> Document:
         row[1].text = decision
         row[2].text = rationale
 
-    add_heading(doc, "Section 2: Working Prototype", 2)
+    add_heading(doc, "Section 2: Working Prototype CODE", 2)
 
     doc.add_paragraph(
         "Working Django project location: sand-fde-assignment/ (submitted with this document)"
@@ -259,11 +283,26 @@ def build_document() -> Document:
     add_bullets(
         doc,
         [
-            "Reads sample DHIS2-like CSV: data/dhis2_facility_indicators.csv",
-            "Calculates: Top 10 facilities, maternal indicators, performance scores, QoQ trends",
-            "HTML dashboard at /",
+            "Reads only the five provided Google Drive files (CSV or Excel) from data/google_drive_source/",
+            "Auto-downloads the shared folder on first run if files are not already present locally",
+            "Calculates bulletin metrics: top facilities, maternal/neonatal indicators, composite performance scores, provincial overview, monthly trends, QoQ momentum, and risk watchlist",
+            "Executive HTML dashboard at /",
             "JSON API at /api/bulletin/",
-            "Export at /export/",
+            "Downloadable JSON export at /export/",
+        ],
+    )
+
+    doc.add_paragraph("Sample output from the current prototype (2024Q4):")
+    add_bullets(
+        doc,
+        [
+            f"Facilities covered: {sample_report.source_summary['facility_count']}",
+            f"Quarter deliveries: {sample_report.maternal_summary['deliveries']:,}",
+            f"Neonatal mortality rate: {sample_report.maternal_summary['neonatal_mortality_rate']}/1k live births",
+            f"Top facility by volume: {sample_report.top_facilities[0]['facility_name']} ({sample_report.top_facilities[0]['deliveries']:,} deliveries)",
+            f"Highest composite readiness score: {sample_report.performance_scores[0]['facility_name']} ({sample_report.performance_scores[0]['overall_score']})",
+            f"Provinces benchmarked: {len(sample_report.provincial_overview)}",
+            f"Facilities flagged on risk watchlist: {len(sample_report.risk_alerts)}",
         ],
     )
 
@@ -272,6 +311,8 @@ def build_document() -> Document:
         doc,
         [
             "cd sand-fde-assignment",
+            "python -m venv .venv",
+            ".venv\\Scripts\\activate  (Windows) or source .venv/bin/activate (macOS/Linux)",
             "pip install -r requirements.txt",
             "python manage.py migrate",
             "python manage.py test",
@@ -281,8 +322,25 @@ def build_document() -> Document:
     )
 
     doc.add_paragraph(
-        "Key code modules: bulletin/services.py (metrics), bulletin/views.py (dashboard/API), "
-        "bulletin/templates/bulletin/dashboard.html (MoH-facing output)."
+        "Key code modules: bulletin/services.py (Drive sync, joins, scoring, metrics), "
+        "bulletin/views.py (dashboard/API), bulletin/templates/bulletin/dashboard.html "
+        "(executive MoH-facing output), capture_screenshots.py (submission screenshots)."
+    )
+
+    add_heading(doc, "Dashboard screenshots", 3)
+    doc.add_paragraph(
+        "The screenshots below are generated from the live prototype so reviewers can see the "
+        "actual working output without running the server."
+    )
+    add_image_if_exists(
+        doc,
+        SCREENSHOT_DIR / "dashboard_hero.png",
+        "Figure 1 — Executive dashboard hero, KPI strip, and strategic summary cards",
+    )
+    add_image_if_exists(
+        doc,
+        SCREENSHOT_DIR / "dashboard_tables.png",
+        "Figure 2 — Facility rankings, risk watchlist, provincial overview, and performance leaders",
     )
 
     add_heading(doc, "Section 3: Implementation Notes", 2)
@@ -291,11 +349,11 @@ def build_document() -> Document:
     add_bullets(
         doc,
         [
-            "CSV file instead of live DHIS2 API — avoids credential blockers in assignment timeframe.",
-            "Completeness proxied by non-zero mandatory fields — not full DHIS2 validation engine.",
-            "No database persistence — stateless compute from file; production would use Postgres.",
-            "JSON export instead of formatted PDF — proves data pipeline; PDF is template work.",
-            "Single consolidated CSV vs separate DHIS2 data element exports.",
+            "Google Drive folder sync instead of live DHIS2 API — avoids credential blockers in assignment timeframe.",
+            "Composite readiness score uses transparent, code-defined weights — not yet MoH-configurable in UI.",
+            "No database persistence — stateless compute from files; production would use Postgres or HealthOS models.",
+            "JSON export instead of formatted PDF — proves data pipeline; PDF is template work for Week 4–6.",
+            "Latest quarter may be partial when the shared clinical file does not yet contain all three months.",
         ],
     )
 
@@ -303,10 +361,9 @@ def build_document() -> Document:
     add_bullets(
         doc,
         [
-            "Works: All four bulletin sections render; period selector; API export; unit tests pass.",
-            "Broken / stubbed: Live DHIS2 pull, user authentication, scheduled monthly job, "
-            "email distribution to districts, Superset dataset auto-refresh.",
-            "Fragile: Performance score weights are hard-coded; changing MoH policy requires code edit.",
+            "Works: Multi-source ingestion, quarter selector, KPI cards, maternal/neonatal indicators, top facilities, performance leaders, provincial overview, risk watchlist, JSON API/export, unit tests.",
+            "Broken / stubbed: Live DHIS2 pull, user authentication, scheduled monthly refresh, email distribution to districts, Superset dataset auto-refresh.",
+            "Fragile: Composite score weights are hard-coded; changing MoH policy requires a code edit or config layer.",
         ],
     )
 
@@ -314,11 +371,10 @@ def build_document() -> Document:
     add_bullets(
         doc,
         [
-            "Even 'simple' bulletin automation touches data governance (what counts as complete?).",
-            "Separating metrics engine (services.py) from presentation enables Superset + HTML reuse.",
-            "Trend analysis exposes data quality issues early — facilities missing prior quarter "
-            "surface immediately.",
-            "Django is sufficient for rapid FDE prototypes; migration path to SHOS services is clear.",
+            "A credible bulletin needs more than one file — joining clinical, governance, workforce, and operations data creates actionable readiness signals.",
+            "Separating ingestion, scoring, and presentation enables HTML, JSON, and Superset reuse from one metrics engine.",
+            "Risk watchlists surface intervention priorities faster than tables alone — mortality plus stockouts plus staffing gaps tell a clearer story.",
+            "Django + Pandas is sufficient for rapid FDE prototypes; migration path to SHOS services and scheduled ETL is clear.",
         ],
     )
 
@@ -340,9 +396,9 @@ def build_document() -> Document:
         ),
         (
             "Data quality & validation",
-            "Concern: Proxy completeness scores may mis-rank facilities.",
+            "Concern: Composite readiness scores depend on proxy fields and partial quarters.",
             "Address: Implement DHIS2 validation rules; anomaly detection via Health Insight Engine; "
-            "manual override workflow for district reviewers.",
+            "manual override workflow for district reviewers; explicit partial-quarter badges.",
         ),
         (
             "Reliability & observability",
@@ -415,9 +471,10 @@ def build_document() -> Document:
         doc,
         [
             "Scoping and design documents — this Word file",
-            "Working code with sample data — sand-fde-assignment/",
+            "Working code with provided Google Drive sample data — sand-fde-assignment/",
             "README with setup/run instructions — README.md",
-            "Output demonstration — run server and open http://127.0.0.1:8000/",
+            "Output demonstration — run server and open http://127.0.0.1:8000/ or review embedded screenshots",
+            "Screenshot assets — submission_assets/ (generated via capture_screenshots.py)",
         ],
     )
 
