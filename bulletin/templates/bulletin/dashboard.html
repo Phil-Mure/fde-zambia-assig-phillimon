@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quarterly Health Bulletin — {{ report.current_period }}</title>
+    <style>
+        :root {
+            --bg: #f4f7fb;
+            --card: #ffffff;
+            --primary: #0b5cab;
+            --accent: #0f766e;
+            --text: #1f2937;
+            --muted: #6b7280;
+            --border: #e5e7eb;
+            --warn: #b45309;
+        }
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.5;
+        }
+        header {
+            background: linear-gradient(135deg, #0b5cab, #0f766e);
+            color: white;
+            padding: 2rem;
+        }
+        header h1 { margin: 0 0 0.5rem; font-size: 1.75rem; }
+        header p { margin: 0; opacity: 0.9; }
+        .container { max-width: 1100px; margin: 0 auto; padding: 1.5rem; }
+        .toolbar {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        .toolbar a, .toolbar button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.6rem 1rem;
+            border-radius: 6px;
+            text-decoration: none;
+            cursor: pointer;
+            font-size: 0.95rem;
+        }
+        .toolbar a.secondary { background: var(--accent); }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1.25rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+        }
+        .card h2 {
+            margin: 0 0 1rem;
+            font-size: 1.1rem;
+            color: var(--primary);
+        }
+        .metric {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+        .metric-label { color: var(--muted); font-size: 0.9rem; }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.92rem;
+        }
+        th, td {
+            border-bottom: 1px solid var(--border);
+            padding: 0.65rem 0.5rem;
+            text-align: left;
+        }
+        th { color: var(--muted); font-weight: 600; }
+        .badge {
+            display: inline-block;
+            padding: 0.15rem 0.5rem;
+            border-radius: 999px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        .badge.ok { background: #d1fae5; color: #065f46; }
+        .badge.warn { background: #fef3c7; color: var(--warn); }
+        .up { color: #047857; }
+        .down { color: #b91c1c; }
+        footer {
+            margin-top: 2rem;
+            color: var(--muted);
+            font-size: 0.85rem;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Rwanda Ministry of Health — Quarterly Health Bulletin</h1>
+            <p>Automated from DHIS2-like facility data · Period {{ report.current_period }} · Generated {{ report.generated_at }}</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="toolbar">
+            <form method="get">
+                <label for="period">Reporting period:</label>
+                <select name="period" id="period" onchange="this.form.submit()">
+                    {% for p in available_periods %}
+                    <option value="{{ p }}" {% if p == report.current_period %}selected{% endif %}>{{ p }}</option>
+                    {% endfor %}
+                </select>
+            </form>
+            <a href="{% url 'bulletin_json' %}?period={{ report.current_period }}">View JSON API</a>
+            <a class="secondary" href="{% url 'bulletin_export' %}?period={{ report.current_period }}">Download bulletin</a>
+        </div>
+
+        <section class="grid">
+            <div class="card">
+                <div class="metric-label">Total ANC visits</div>
+                <div class="metric">{{ report.maternal_summary.anc_visits_total }}</div>
+            </div>
+            <div class="card">
+                <div class="metric-label">Deliveries</div>
+                <div class="metric">{{ report.maternal_summary.deliveries }}</div>
+            </div>
+            <div class="card">
+                <div class="metric-label">Complications</div>
+                <div class="metric">{{ report.maternal_summary.complications }}</div>
+            </div>
+            <div class="card">
+                <div class="metric-label">Complication rate</div>
+                <div class="metric">{{ report.maternal_summary.complication_rate_pct }}%</div>
+            </div>
+        </section>
+
+        <section class="card" style="margin-bottom: 1.5rem;">
+            <h2>Top 10 Facilities by Patient Volume</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Rank</th>
+                        <th>Facility</th>
+                        <th>District</th>
+                        <th>Patient volume</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in report.top_facilities %}
+                    <tr>
+                        <td>{{ row.rank }}</td>
+                        <td>{{ row.facility_name }}</td>
+                        <td>{{ row.district }}</td>
+                        <td>{{ row.patient_volume }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </section>
+
+        <section class="card" style="margin-bottom: 1.5rem;">
+            <h2>Facility Performance Scores</h2>
+            <p style="color: var(--muted); margin-top: 0;">Weighted: 40% timeliness + 60% reporting completeness (proxy from mandatory fields).</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Facility</th>
+                        <th>District</th>
+                        <th>Timeliness</th>
+                        <th>Completeness</th>
+                        <th>Overall</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in report.performance_scores %}
+                    <tr>
+                        <td>{{ row.facility_name }}</td>
+                        <td>{{ row.district }}</td>
+                        <td>{{ row.timeliness_score }}</td>
+                        <td>{{ row.completeness_score }}</td>
+                        <td><strong>{{ row.overall_score }}</strong></td>
+                        <td>
+                            {% if row.submitted_on_time and row.report_complete %}
+                            <span class="badge ok">On track</span>
+                            {% else %}
+                            <span class="badge warn">Needs follow-up</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </section>
+
+        <section class="card">
+            <h2>Trend Analysis vs {{ report.previous_period }}</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Facility</th>
+                        <th>Current volume</th>
+                        <th>Previous volume</th>
+                        <th>Change</th>
+                        <th>% Change</th>
+                        <th>Deliveries Δ</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in report.trend_analysis %}
+                    <tr>
+                        <td>{{ row.facility_name }}</td>
+                        <td>{{ row.current_volume }}</td>
+                        <td>{{ row.previous_volume }}</td>
+                        <td>{{ row.volume_change }}</td>
+                        <td class="{% if row.volume_change_pct >= 0 %}up{% else %}down{% endif %}">
+                            {{ row.volume_change_pct }}%
+                        </td>
+                        <td>{{ row.deliveries_change }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </section>
+
+        <footer>
+            Sand Health Operating System prototype · Replaces ~40 hrs/month manual bulletin compilation
+        </footer>
+    </div>
+</body>
+</html>

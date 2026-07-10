@@ -1,0 +1,31 @@
+facility_id,facility_name,district,period,patient_volume,anc_visits_first,anc_visits_total,deliveries,complications,report_submitted_date,reporting_deadline
+F001,Kigali University Teaching Hospital,Kigali,2025Q1,12450,890,2340,1120,45,2025-04-05,2025-04-10
+F002,King Faisal Hospital,Kigali,2025Q1,9870,720,1890,980,32,2025-04-08,2025-04-10
+F003,Rwamagana District Hospital,Rwamagana,2025Q1,6540,510,1420,680,28,2025-04-12,2025-04-10
+F004,Butaro District Hospital,Burera,2025Q1,4320,380,980,420,19,2025-04-09,2025-04-10
+F005,Muhima Health Centre,Kigali,2025Q1,3890,290,820,310,12,2025-04-07,2025-04-10
+F006,Gitwe District Hospital,Ruhango,2025Q1,3650,275,760,295,15,2025-04-15,2025-04-10
+F007,Nyamata District Hospital,Bugesera,2025Q1,3420,260,710,280,11,2025-04-06,2025-04-10
+F008,Ruhengeri Referral Hospital,Musanze,2025Q1,3210,245,690,265,14,2025-04-11,2025-04-10
+F009,Kibagabaga District Hospital,Kigali,2025Q1,2980,220,640,240,9,2025-04-04,2025-04-10
+F010,Byumba District Hospital,Gicumbi,2025Q1,2760,205,590,225,10,2025-04-18,2025-04-10
+F011,Gisenyi District Hospital,Rubavu,2025Q1,2540,190,540,210,8,2025-04-03,2025-04-10
+F012,Kibuye District Hospital,Karongi,2025Q1,2310,175,490,195,7,2025-04-10,2025-04-10
+F013,Nyanza District Hospital,Nyanza,2025Q1,2180,165,470,185,6,2025-04-14,2025-04-10
+F014,Kibungo District Hospital,Ngoma,2025Q1,2050,155,440,175,8,2025-04-09,2025-04-10
+F015,Musanze Health Centre,Musanze,2025Q1,1920,145,410,160,5,2025-04-07,2025-04-10
+F001,Kigali University Teaching Hospital,Kigali,2024Q4,11890,850,2210,1080,42,2025-01-08,2025-01-10
+F002,King Faisal Hospital,Kigali,2024Q4,9450,690,1820,950,30,2025-01-06,2025-01-10
+F003,Rwamagana District Hospital,Rwamagana,2024Q4,6210,490,1380,660,26,2025-01-12,2025-01-10
+F004,Butaro District Hospital,Burera,2024Q4,4100,360,940,400,18,2025-01-09,2025-01-10
+F005,Muhima Health Centre,Kigali,2024Q4,3720,275,790,295,11,2025-01-07,2025-01-10
+F006,Gitwe District Hospital,Ruhango,2024Q4,3480,260,730,280,14,2025-01-15,2025-01-10
+F007,Nyamata District Hospital,Bugesera,2024Q4,3280,245,680,265,10,2025-01-06,2025-01-10
+F008,Ruhengeri Referral Hospital,Musanze,2024Q4,3050,230,660,250,13,2025-01-11,2025-01-10
+F009,Kibagabaga District Hospital,Kigali,2024Q4,2840,205,610,225,8,2025-01-04,2025-01-10
+F010,Byumba District Hospital,Gicumbi,2024Q4,2620,195,560,210,9,2025-01-18,2025-01-10
+F011,Gisenyi District Hospital,Rubavu,2024Q4,2410,180,520,200,7,2025-01-03,2025-01-10
+F012,Kibuye District Hospital,Karongi,2024Q4,2190,165,470,185,6,2025-01-10,2025-01-10
+F013,Nyanza District Hospital,Nyanza,2024Q4,2060,155,450,175,5,2025-01-14,2025-01-10
+F014,Kibungo District Hospital,Ngoma,2024Q4,1940,145,420,165,7,2025-01-09,2025-01-10
+F015,Musanze Health Centre,Musanze,2024Q4,1810,135,390,150,4,2025-01-07,2025-01-10
