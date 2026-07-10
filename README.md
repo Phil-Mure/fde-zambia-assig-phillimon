@@ -6,16 +6,15 @@ This Django prototype automates the Quarterly Health Bulletin workflow from the 
 
 ## Final Submission Files
 
-The polished assignment document was generated in both Word and PDF formats:
+Final assignment document:
 
-- `Phillimon_Murebwa_Sand_Healthcare_FDE_Assignment_Submission.docx`
 - `Phillimon_Murebwa_Sand_Healthcare_FDE_Assignment_Submission.pdf`
 
-Project-local generated copies:
+## Live Demo
 
-- `Sand_Healthcare_Forward_Deployed_Engineer_Assignment_1125-2.docx`
-- `Sand_Healthcare_Forward_Deployed_Engineer_Assignment_1125-2.pdf`
-- `Sand_FDE_Assignment_Submission.docx`
+Render deployment:
+
+[https://fde-zambia-assig-phillimon.onrender.com/](https://fde-zambia-assig-phillimon.onrender.com/)
 
 ## Data Source
 
@@ -64,7 +63,7 @@ Local development copies are stored in `data/google_drive_source/`.
 - JSON API: `/api/bulletin/`
 - Downloadable JSON export: `/export/`
 - Chart analytics are embedded in the dashboard and use the same report payload as the JSON API.
-- Final Word/PDF assignment package generated from `finalize_submission_doc.py`
+- Final assignment PDF: `Phillimon_Murebwa_Sand_Healthcare_FDE_Assignment_Submission.pdf`
 
 ## Dashboard Screenshots
 
@@ -82,6 +81,7 @@ These are real screenshots captured from the running Django dashboard with Playw
 
 Useful demo URLs after starting the server:
 
+- Render dashboard: `https://fde-zambia-assig-phillimon.onrender.com/`
 - Quarterly dashboard: `http://127.0.0.1:8000/?granularity=Q&period=2024Q4`
 - Annual rollup dashboard: `http://127.0.0.1:8000/?granularity=A&period=2024`
 - Annual JSON API: `http://127.0.0.1:8000/api/bulletin/?granularity=A&period=2024`
@@ -103,24 +103,6 @@ python manage.py runserver
 
 Open `http://127.0.0.1:8000/` in your browser.
 
-## Regenerate Screenshots And Final Submission
-
-```bash
-python capture_screenshots.py
-python finalize_submission_doc.py
-```
-
-Generated outputs:
-
-- `Sand_Healthcare_Forward_Deployed_Engineer_Assignment_1125-2.docx`
-- `Sand_Healthcare_Forward_Deployed_Engineer_Assignment_1125-2.pdf`
-- `Sand_FDE_Assignment_Submission.docx`
-- `submission_assets/dashboard_hero.png`
-- `submission_assets/dashboard_charts_bar.png`
-- `submission_assets/dashboard_charts_doughnut.png`
-- `submission_assets/dashboard_advanced_rollups.png`
-- `submission_assets/dashboard_tables.png`
-
 ## Project Structure
 
 ```text
@@ -135,9 +117,7 @@ sand-fde-assignment/
 |   `-- google_drive_source/        # Local copies of the provided Drive files
 |-- health_bulletin/                # Django project settings
 |-- submission_assets/              # Screenshots and extracted assignment prompt
-|-- capture_screenshots.py          # Captures dashboard evidence for the submission
-|-- finalize_submission_doc.py      # Generates the final Phillimon Murebwa submission document
-|-- generate_submission_doc.py      # Earlier document generator kept for reference
+|-- Phillimon_Murebwa_Sand_Healthcare_FDE_Assignment_Submission.pdf
 |-- manage.py
 |-- requirements.txt
 `-- README.md
