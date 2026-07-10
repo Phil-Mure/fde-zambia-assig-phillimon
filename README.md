@@ -52,6 +52,8 @@ Local development copies are stored in `data/google_drive_source/`.
   - Facility performance/readiness scores
   - Provincial performance overview
   - Monthly, quarterly, and annual trend analysis
+  - Interactive analytics charts with bar, line, area, histogram, pie, and doughnut views
+  - Mixed readiness-vs-delivery and provincial share charts powered by Chart.js
   - MoM, QoQ, and YoY comparisons
   - Risk watchlist for intervention prioritization
   - Annualized forecasts and reporting completeness
@@ -61,7 +63,22 @@ Local development copies are stored in `data/google_drive_source/`.
 - HTML dashboard: `/`
 - JSON API: `/api/bulletin/`
 - Downloadable JSON export: `/export/`
+- Chart analytics are embedded in the dashboard and use the same report payload as the JSON API.
 - Final Word/PDF assignment package generated from `finalize_submission_doc.py`
+
+## Dashboard Screenshots
+
+These are real screenshots captured from the running Django dashboard with Playwright.
+
+![Executive dashboard with KPIs and strategic summary](submission_assets/dashboard_hero.png)
+
+![Interactive chart analytics with mixed bar and line chart](submission_assets/dashboard_charts_bar.png)
+
+![Interactive chart analytics with doughnut chart mode](submission_assets/dashboard_charts_doughnut.png)
+
+![Advanced aggregation intelligence and annual rollups](submission_assets/dashboard_advanced_rollups.png)
+
+![Facility tables, risk watchlist, and performance leaders](submission_assets/dashboard_tables.png)
 
 Useful demo URLs after starting the server:
 
@@ -99,6 +116,8 @@ Generated outputs:
 - `Sand_Healthcare_Forward_Deployed_Engineer_Assignment_1125-2.pdf`
 - `Sand_FDE_Assignment_Submission.docx`
 - `submission_assets/dashboard_hero.png`
+- `submission_assets/dashboard_charts_bar.png`
+- `submission_assets/dashboard_charts_doughnut.png`
 - `submission_assets/dashboard_advanced_rollups.png`
 - `submission_assets/dashboard_tables.png`
 
@@ -135,7 +154,7 @@ python manage.py test
 Current expected result:
 
 ```text
-Found 9 test(s).
+Found 12 test(s).
 System check identified no issues.
 OK
 ```

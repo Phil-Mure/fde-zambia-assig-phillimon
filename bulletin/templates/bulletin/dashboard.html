@@ -9,6 +9,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.0/dist/chart.umd.min.js" defer></script>
     <style>
         :root {
             --bg: #f4f7fa;
@@ -189,6 +190,30 @@
             background: var(--primary-dark);
             border-color: var(--primary-dark);
             color: #ffffff;
+        }
+        .chart-jump {
+            margin-top: 18px;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            width: fit-content;
+            background: #111827;
+            color: #ffffff;
+            border: 1px solid #111827;
+            border-radius: 10px;
+            padding: 12px 16px;
+            text-decoration: none;
+            font-weight: 800;
+            box-shadow: 0 10px 24px rgba(15, 23, 42, 0.18);
+        }
+        .chart-jump:hover {
+            background: var(--primary-dark);
+            border-color: var(--primary-dark);
+            color: #ffffff;
+        }
+        .chart-jump .icon {
+            font-size: 1.1rem;
+            line-height: 1;
         }
         .kpi-strip {
             grid-template-columns: repeat(6, minmax(0, 1fr));
@@ -463,6 +488,85 @@
             text-transform: uppercase;
             letter-spacing: 0.05em;
         }
+        .chart-panel {
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        .chart-toolbar {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(220px, 1fr)) auto;
+            gap: 12px;
+            align-items: end;
+            margin-bottom: 16px;
+        }
+        .chart-control {
+            background: var(--surface-muted);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 10px 12px;
+            min-width: 0;
+        }
+        .chart-control label {
+            display: block;
+            color: var(--muted);
+            font-size: 0.75rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 4px;
+        }
+        .chart-control select {
+            font-size: 0.95rem;
+        }
+        .chart-hint {
+            display: flex;
+            align-items: center;
+            color: var(--primary-dark);
+            background: var(--primary-light);
+            border: 1px solid #b2ddff;
+            border-radius: 10px;
+            min-height: 48px;
+            padding: 10px 12px;
+            font-size: 0.86rem;
+            font-weight: 700;
+            min-width: 0;
+        }
+        .chart-canvas-wrap {
+            position: relative;
+            width: 100%;
+            min-width: 0;
+            height: 430px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+            padding: 14px;
+        }
+        .chart-grid {
+            display: grid;
+            grid-template-columns: 1.25fr 0.75fr;
+            gap: 16px;
+            margin-top: 16px;
+        }
+        .chart-card {
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            background: var(--surface-muted);
+            padding: 14px;
+            min-width: 0;
+        }
+        .chart-card h3 {
+            margin: 0 0 10px;
+            font-size: 0.95rem;
+        }
+        .chart-card .chart-canvas-wrap {
+            height: 280px;
+            background: #ffffff;
+        }
+        .chart-note {
+            color: var(--muted);
+            font-size: 0.84rem;
+            margin-top: 10px;
+        }
         .catalog-item {
             background: var(--surface-muted);
             border: 1px solid var(--border);
@@ -501,8 +605,13 @@
             .hero-top,
             .grid-2,
             .rollup-grid,
+            .chart-grid,
+            .chart-toolbar,
             .toolbar {
                 grid-template-columns: 1fr;
+            }
+            .chart-toolbar {
+                align-items: stretch;
             }
         }
         @media (max-width: 720px) {
@@ -536,6 +645,10 @@
                         blends clinical outcomes, governance quality, workforce capacity, infrastructure readiness, and
                         operational performance into one executive view for rapid decision-making.
                     </p>
+                    <a class="chart-jump" href="#chart-analytics">
+                        <span class="icon">▦</span>
+                        View analytics as charts
+                    </a>
                 </div>
                 <aside class="hero-card">
                     <h3>Report metadata</h3>
@@ -609,6 +722,61 @@
                 <p>{{ item.detail }}</p>
             </article>
             {% endfor %}
+        </section>
+
+        <section class="panel chart-panel" id="chart-analytics">
+            <div class="panel-header">
+                <div>
+                    <h2>Analytics Charts</h2>
+                    <p>Switch between chart types for trend, facility, provincial, and score-distribution views.</p>
+                </div>
+            </div>
+            <div class="chart-toolbar">
+                <div class="chart-control">
+                    <label for="chart-type">Chart type</label>
+                    <select id="chart-type">
+                        <option value="bar">Bar</option>
+                        <option value="line">Line</option>
+                        <option value="area">Area</option>
+                        <option value="histogram">Histogram</option>
+                        <option value="pie">Pie</option>
+                        <option value="doughnut">Doughnut</option>
+                    </select>
+                </div>
+                <div class="chart-control">
+                    <label for="chart-view">Analytics view</label>
+                    <select id="chart-view">
+                        <option value="trend">Period trend: deliveries and mortality</option>
+                        <option value="facilities">Top facilities by delivery volume</option>
+                        <option value="province">Provincial delivery share</option>
+                        <option value="scores">Readiness score distribution</option>
+                        <option value="rollup">Child-period rollup contribution</option>
+                    </select>
+                </div>
+                <div class="chart-hint" id="chart-type-hint">
+                    Mixed bar and line view highlights service volume against outcome rate.
+                </div>
+            </div>
+            <div class="chart-canvas-wrap">
+                <canvas id="analytics-chart" aria-label="Interactive analytics chart" role="img"></canvas>
+            </div>
+            <div class="chart-note" id="chart-context">
+                Chart data comes from the same metrics engine as the bulletin tables and JSON API.
+            </div>
+            <div class="chart-grid">
+                <article class="chart-card">
+                    <h3>Readiness vs Delivery Load</h3>
+                    <div class="chart-canvas-wrap">
+                        <canvas id="readiness-chart" aria-label="Readiness and delivery load chart" role="img"></canvas>
+                    </div>
+                </article>
+                <article class="chart-card">
+                    <h3>Provincial Share</h3>
+                    <div class="chart-canvas-wrap">
+                        <canvas id="province-share-chart" aria-label="Provincial delivery share chart" role="img"></canvas>
+                    </div>
+                </article>
+            </div>
         </section>
 
         <section class="panel" style="margin-bottom: 20px;">
@@ -993,7 +1161,341 @@
             Advanced prototype for Sand Technologies FDE assignment · Auto-refreshes every {{ auto_refresh_seconds }} seconds to reflect newly added Drive files
         </footer>
     </div>
+    {{ report.monthly_trends|json_script:"chart-trends" }}
+    {{ report.top_facilities|json_script:"chart-facilities" }}
+    {{ report.provincial_overview|json_script:"chart-provinces" }}
+    {{ report.performance_scores|json_script:"chart-performance" }}
+    {{ report.period_breakdown|json_script:"chart-breakdown" }}
+    {{ report.rollup_summary.monthly_contributions|json_script:"chart-monthly-contributions" }}
     <script>
+        (function () {
+            const palette = ["#0b6e8e", "#0d9488", "#175cd3", "#b54708", "#067647", "#7c3aed", "#b42318", "#475467"];
+            const mutedPalette = ["#e6f4f8", "#ccfbf1", "#eff8ff", "#fffaeb", "#ecfdf3", "#f3e8ff", "#fef3f2", "#f1f5f9"];
+
+            function readJson(id) {
+                const element = document.getElementById(id);
+                if (!element) return [];
+                try {
+                    return JSON.parse(element.textContent || "[]");
+                } catch (error) {
+                    return [];
+                }
+            }
+
+            function waitForCharts(callback, retries = 80) {
+                if (window.Chart) {
+                    callback();
+                    return;
+                }
+                if (retries <= 0) return;
+                window.setTimeout(function () {
+                    waitForCharts(callback, retries - 1);
+                }, 100);
+            }
+
+            function formatNumber(value) {
+                return Number(value || 0).toLocaleString();
+            }
+
+            function toNumber(value) {
+                const number = Number(value || 0);
+                return Number.isFinite(number) ? number : 0;
+            }
+
+            function chartColors(count) {
+                return Array.from({ length: count }, function (_, index) {
+                    return palette[index % palette.length];
+                });
+            }
+
+            function scoreBins(rows) {
+                const bins = [
+                    { label: "0-39 Critical", min: 0, max: 39.999, count: 0 },
+                    { label: "40-59 Watch", min: 40, max: 59.999, count: 0 },
+                    { label: "60-79 Stable", min: 60, max: 79.999, count: 0 },
+                    { label: "80-100 High", min: 80, max: 100, count: 0 },
+                ];
+                rows.forEach(function (row) {
+                    const score = Number(row.overall_score || 0);
+                    const bin = bins.find(function (item) {
+                        return score >= item.min && score <= item.max;
+                    });
+                    if (bin) bin.count += 1;
+                });
+                return bins;
+            }
+
+            function normalizeViewForType(type, view) {
+                if (type === "histogram") return "scores";
+                if ((type === "pie" || type === "doughnut") && !["province", "facilities", "rollup", "scores"].includes(view)) {
+                    return "province";
+                }
+                return view;
+            }
+
+            function chartTypeHint(type) {
+                const hints = {
+                    bar: "Best for ranked facility, province, and reporting-period comparisons.",
+                    line: "Best for period trends where direction and change over time matter.",
+                    area: "Best for trend magnitude while keeping the time-series shape visible.",
+                    histogram: "Best for readiness distribution; automatically uses score bands.",
+                    pie: "Best for quick proportional share views across provinces or facilities.",
+                    doughnut: "Best for executive share-of-total comparisons with compact legends.",
+                };
+                return hints[type] || hints.bar;
+            }
+
+            function baseChartOptions(isCircular) {
+                return {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: isCircular ? { intersect: true } : { mode: "index", intersect: false },
+                    plugins: {
+                        legend: { position: "bottom", labels: { usePointStyle: true, boxWidth: 8 } },
+                        tooltip: {
+                            callbacks: {
+                                label: function (context) {
+                                    const label = context.dataset.label || context.label || "";
+                                    const value = context.parsed && typeof context.parsed === "object"
+                                        ? context.parsed.y
+                                        : context.parsed;
+                                    return label + ": " + formatNumber(value);
+                                },
+                            },
+                        },
+                    },
+                    scales: isCircular ? {} : {
+                        x: { grid: { display: false } },
+                        y: { beginAtZero: true, grid: { color: "#e8eef4" } },
+                    },
+                };
+            }
+
+            function simpleDataset(label, rows, labels, values, type, color) {
+                const isCircular = type === "pie" || type === "doughnut";
+                const isArea = type === "area";
+                const chartType = isArea ? "line" : type === "histogram" ? "bar" : type;
+                const rowValues = rows.map(function (row) {
+                    return toNumber(values(row));
+                });
+                const options = baseChartOptions(isCircular);
+                if (type === "doughnut") options.cutout = "62%";
+                return {
+                    type: chartType,
+                    data: {
+                        labels: rows.map(labels),
+                        datasets: [{
+                            label,
+                            data: rowValues,
+                            backgroundColor: isCircular ? chartColors(rows.length) : color,
+                            borderColor: isCircular ? "#ffffff" : color,
+                            borderWidth: 2,
+                            fill: isArea,
+                            tension: 0.35,
+                            pointRadius: chartType === "line" ? 4 : 0,
+                            pointHoverRadius: chartType === "line" ? 6 : 0,
+                        }],
+                    },
+                    options,
+                };
+            }
+
+            function buildChartConfig(type, view, data) {
+                const normalizedView = normalizeViewForType(type, view);
+                const isCircular = type === "pie" || type === "doughnut";
+                const isArea = type === "area";
+                const chartType = type === "histogram" ? "bar" : isArea ? "line" : type;
+
+                if (normalizedView === "facilities") {
+                    return {
+                        context: "Top facilities ranked by selected-period delivery volume.",
+                        config: simpleDataset("Deliveries", data.facilities.slice(0, 10), (row) => row.facility_name, (row) => row.deliveries, type, "#0b6e8e"),
+                    };
+                }
+
+                if (normalizedView === "province") {
+                    return {
+                        context: "Provincial delivery share and service burden in the selected reporting period.",
+                        config: simpleDataset("Deliveries", data.provinces, (row) => row.province, (row) => row.deliveries, type, "#0d9488"),
+                    };
+                }
+
+                if (normalizedView === "scores") {
+                    const bins = scoreBins(data.performance);
+                    return {
+                        context: "Histogram-style distribution of facility readiness bands from the performance score model.",
+                        config: {
+                            type: isCircular ? type : "bar",
+                            data: {
+                                labels: bins.map((row) => row.label),
+                                datasets: [{
+                                    label: "Facilities",
+                                    data: bins.map((row) => row.count),
+                                    backgroundColor: isCircular ? chartColors(bins.length) : ["#fef3f2", "#fffaeb", "#eff8ff", "#ecfdf3"],
+                                    borderColor: isCircular ? "#ffffff" : ["#b42318", "#b54708", "#175cd3", "#067647"],
+                                    borderWidth: 2,
+                                }],
+                            },
+                            options: {
+                                ...baseChartOptions(isCircular),
+                                ...(type === "doughnut" ? { cutout: "62%" } : {}),
+                            },
+                        },
+                    };
+                }
+
+                if (normalizedView === "rollup") {
+                    const rows = data.breakdown.length ? data.breakdown : data.monthlyContributions.length ? data.monthlyContributions : data.trends;
+                    return {
+                        context: "Contribution of child reporting periods inside the selected monthly, quarterly, or annual report.",
+                        config: simpleDataset("Deliveries", rows, (row) => row.label || row.key, (row) => row.deliveries, type, "#175cd3"),
+                    };
+                }
+
+                const options = baseChartOptions(isCircular);
+                if (type === "doughnut") options.cutout = "62%";
+                return {
+                    context: "Reporting-period trend view comparing delivery volume with neonatal mortality rate.",
+                    config: {
+                        type: chartType,
+                        data: {
+                            labels: data.trends.map((row) => row.label),
+                            datasets: [
+                                {
+                                    type: chartType,
+                                    label: "Deliveries",
+                                    data: data.trends.map((row) => toNumber(row.deliveries)),
+                                    backgroundColor: isArea ? "rgba(11, 110, 142, 0.18)" : "#0b6e8e",
+                                    borderColor: "#0b6e8e",
+                                    borderWidth: 2,
+                                    fill: isArea,
+                                    tension: 0.35,
+                                    pointRadius: chartType === "line" ? 4 : 0,
+                                    pointHoverRadius: chartType === "line" ? 6 : 0,
+                                },
+                                {
+                                    type: isCircular ? chartType : "line",
+                                    label: "Neonatal mortality /1k",
+                                    data: data.trends.map((row) => toNumber(row.neonatal_mortality_rate)),
+                                    backgroundColor: isCircular ? mutedPalette : "rgba(180, 35, 24, 0.12)",
+                                    borderColor: "#b42318",
+                                    borderWidth: 2,
+                                    fill: false,
+                                    tension: 0.35,
+                                    yAxisID: isCircular ? undefined : "y1",
+                                    pointRadius: 4,
+                                    pointHoverRadius: 6,
+                                },
+                            ],
+                        },
+                        options: isCircular ? options : {
+                            ...options,
+                            scales: {
+                                x: { grid: { display: false } },
+                                y: { beginAtZero: true, position: "left", grid: { color: "#e8eef4" } },
+                                y1: { beginAtZero: true, position: "right", grid: { drawOnChartArea: false } },
+                            },
+                        },
+                    },
+                };
+            }
+
+            function createCompanionCharts(data) {
+                const readinessCanvas = document.getElementById("readiness-chart");
+                const provinceCanvas = document.getElementById("province-share-chart");
+                if (readinessCanvas) {
+                    new Chart(readinessCanvas, {
+                        type: "bar",
+                        data: {
+                            labels: data.performance.map((row) => row.facility_name),
+                            datasets: [
+                                {
+                                    label: "Overall readiness score",
+                                    data: data.performance.map((row) => row.overall_score),
+                                    backgroundColor: "#0d9488",
+                                    borderColor: "#0b6e8e",
+                                    borderWidth: 2,
+                                },
+                                {
+                                    label: "Deliveries",
+                                    data: data.performance.map((row) => row.deliveries || 0),
+                                    type: "line",
+                                    borderColor: "#b54708",
+                                    backgroundColor: "rgba(181, 71, 8, 0.14)",
+                                    yAxisID: "y1",
+                                    tension: 0.35,
+                                },
+                            ],
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: { legend: { position: "bottom" } },
+                            scales: {
+                                x: { ticks: { display: false }, grid: { display: false } },
+                                y: { beginAtZero: true, max: 100 },
+                                y1: { beginAtZero: true, position: "right", grid: { drawOnChartArea: false } },
+                            },
+                        },
+                    });
+                }
+                if (provinceCanvas) {
+                    new Chart(provinceCanvas, {
+                        type: "doughnut",
+                        data: {
+                            labels: data.provinces.map((row) => row.province),
+                            datasets: [{
+                                label: "Deliveries",
+                                data: data.provinces.map((row) => row.deliveries),
+                                backgroundColor: chartColors(data.provinces.length),
+                                borderColor: "#ffffff",
+                                borderWidth: 2,
+                            }],
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            cutout: "62%",
+                            plugins: { legend: { position: "bottom", labels: { usePointStyle: true, boxWidth: 8 } } },
+                        },
+                    });
+                }
+            }
+
+            waitForCharts(function () {
+                const canvas = document.getElementById("analytics-chart");
+                const chartType = document.getElementById("chart-type");
+                const chartView = document.getElementById("chart-view");
+                const chartContext = document.getElementById("chart-context");
+                const chartTypeHintNode = document.getElementById("chart-type-hint");
+                if (!canvas || !chartType || !chartView) return;
+                const data = {
+                    trends: readJson("chart-trends"),
+                    facilities: readJson("chart-facilities"),
+                    provinces: readJson("chart-provinces"),
+                    performance: readJson("chart-performance"),
+                    breakdown: readJson("chart-breakdown"),
+                    monthlyContributions: readJson("chart-monthly-contributions"),
+                };
+                let analyticsChart;
+
+                function render() {
+                    const normalizedView = normalizeViewForType(chartType.value, chartView.value);
+                    if (chartView.value !== normalizedView) chartView.value = normalizedView;
+                    const built = buildChartConfig(chartType.value, normalizedView, data);
+                    if (analyticsChart) analyticsChart.destroy();
+                    analyticsChart = new Chart(canvas, built.config);
+                    if (chartContext) chartContext.textContent = built.context;
+                    if (chartTypeHintNode) chartTypeHintNode.textContent = chartTypeHint(chartType.value);
+                }
+
+                chartType.addEventListener("change", render);
+                chartView.addEventListener("change", render);
+                render();
+                createCompanionCharts(data);
+            });
+        })();
+
         // Keep the selected period while automatically picking up new Google Drive files.
         (function () {
             const refreshSeconds = {{ auto_refresh_seconds }};

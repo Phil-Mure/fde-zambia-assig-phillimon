@@ -21,6 +21,8 @@ class BulletinServiceTests(TestCase):
         self.assertGreater(len(report.provincial_overview), 0)
         self.assertGreater(len(report.risk_alerts), 0)
         self.assertGreater(len(report.trend_analysis), 0)
+        self.assertIn("deliveries", report.performance_scores[0])
+        self.assertGreaterEqual(report.performance_scores[0]["deliveries"], 0)
 
     def test_file_catalog_classifies_core_drive_files(self):
         datasets = load_datasets()
@@ -73,6 +75,31 @@ class BulletinViewTests(TestCase):
         self.assertContains(response, "Serving analytics from local source files")
         self.assertContains(response, 'rel="icon"')
         self.assertContains(response, 'href="/static/bulletin/favicon.svg"')
+
+    def test_dashboard_exposes_interactive_chart_analytics(self):
+        response = self.client.get("/?granularity=A&period=2024")
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "View analytics as charts")
+        self.assertContains(response, "Analytics Charts")
+        self.assertContains(response, "chart.umd.min.js")
+        self.assertContains(response, 'id="chart-type"')
+        self.assertContains(response, 'id="chart-type-hint"')
+        self.assertContains(response, 'id="analytics-chart"')
+        self.assertContains(response, 'id="readiness-chart"')
+        self.assertContains(response, 'id="province-share-chart"')
+        self.assertContains(response, "normalizeViewForType")
+        self.assertContains(response, "chartColors")
+        self.assertContains(response, "chartView.value = normalizedView")
+        for chart_type in ["histogram", "bar", "area", "line", "pie", "doughnut"]:
+            self.assertContains(response, f'value="{chart_type}"')
+        for script_id in [
+            "chart-trends",
+            "chart-facilities",
+            "chart-provinces",
+            "chart-performance",
+            "chart-breakdown",
+        ]:
+            self.assertContains(response, f'id="{script_id}"')
 
     def test_force_refresh_query_param(self):
         response = self.client.get("/api/bulletin/?period=2024Q4&refresh=1")

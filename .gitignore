@@ -1,1 +1,14 @@
-.venv
+.venv/
+__pycache__/
+*.py[cod]
+
+# Generated submission helpers and documents.
+capture_screenshots.py
+finalize_submission_doc.py
+generate_submission_doc.py
+Sand_FDE_Assignment_Submission.docx
+Sand_Healthcare_Forward_Deployed_Engineer_Assignment_1125-2.docx
+Sand_Healthcare_Forward_Deployed_Engineer_Assignment_1125-2.pdf
+
+# Keep only the final submission PDF versioned.
+!Phillimon_Murebwa_Sand_Healthcare_FDE_Assignment_Submission.pdf
